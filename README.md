@@ -107,66 +107,28 @@ spark-submit /app/nettoyage_sismique.py
 
 # Analyse des Événements Sismiques
 ## fichier "/app/analyse_preliminaire.py"
-## Vue d'ensemble
-Analyse des données sismiques à partir de deux datasets : un dataset général et un dataset par villes. L'analyse s'effectue en plusieurs étapes pour détecter et caractériser les événements sismiques significatifs.
+Analyse Préliminaire des Données Sismiques avec PySpark
+Ce script PySpark effectue une analyse préliminaire des données sismiques en calculant des statistiques horaires clés. Il s'intègre dans notre pipeline de traitement des données sismiques.
+Fonctionnalités
 
-## Structure des données
-Les données source sont stockées dans HDFS :
-- Dataset général : `hdfs://namenode:9000/user/hive/warehouse/seismic_data/dataset_sismique_nettoye`
-- Dataset par villes : `hdfs://namenode:9000/user/hive/warehouse/seismic_data/dataset_sismique_villes_nettoye`
+Agrégation des données par fenêtre horaire
+Calcul des métriques suivantes :
 
-## Résultats d'analyse
+Nombre total d'observations par heure
+Nombre de secousses détectées
+Magnitude moyenne des événements
+Magnitude maximale enregistrée
+Tension moyenne entre les plaques
 
-### 1. Analyse Temporelle (par heure)
-#### Dataset Général
-- Période la plus active : 03:00-04:00 avec 23 secousses
-- Magnitude maximale : 8.01 (03:24:00)
-- Tension moyenne entre plaques : varie entre 1.05 et 1.10
+Résultats notables
+L'analyse montre des variations significatives dans l'activité sismique :
 
-#### Dataset par Villes
-- Période la plus active : 01:00-02:00 avec 59 secousses
-- Magnitude maximale : 8.03 (Los Angeles, 01:47:00)
-- Activité plus intense dans les premières heures
+Pics d'activité : Jusqu'à 12 secousses par heure avec des magnitudes maximales dépassant 7.0
+Périodes calmes : Certaines heures sans aucune secousse (ex: 05:00:00)
+Tension variable : La tension entre les plaques oscille entre 1.07 et 1.43
 
-### 2. Événements Significatifs
-Les événements sont considérés importants quand leur magnitude dépasse :
-- Dataset général : > 4.09
-- Dataset par villes : > 3.92
-
-Top 5 des événements les plus importants :
-1. Los Angeles (8.03)
-2. Los Angeles (7.96)
-3. Mexico (7.90)
-4. San Francisco (7.84)
-5. Mexico (7.68)
-
-### 3. Analyse par Ville
-Classement des villes par activité sismique :
-1. Tokyo : 40 secousses (magnitude max : 7.54)
-2. Mexico : 36 secousses (magnitude max : 7.90)
-3. Los Angeles : 32 secousses (magnitude max : 8.03)
-4. Istanbul : 29 secousses (magnitude max : 7.06)
-5. San Francisco : 28 secousses (magnitude max : 7.84)
-
-### 4. Corrélations Tension-Secousses
-- Événements sans secousse : variation tension moyenne = +0.011
-- Événements avec secousse : variation tension moyenne = -0.048
-- Indique une baisse de tension précédant les secousses
-
-## Stockage des Résultats
-Les résultats d'analyse sont stockés au format Parquet dans HDFS :
-```
-hdfs://namenode:9000/user/hive/warehouse/seismic_data/
-├── analyse_stats_horaires/      # Statistiques horaires
-├── analyse_evenements_importants/   # Événements significatifs
-└── analyse_stats_villes/        # Statistiques par ville
-```
-
-## Conclusions Principales
-1. Les secousses les plus importantes se produisent principalement en début de journée
-2. Los Angeles présente les magnitudes les plus élevées
-3. Tokyo a le plus grand nombre de secousses
-4. Une baisse de tension entre les plaques précède généralement les secousses
+Stockage
+Les résultats sont sauvegardés au format Parquet dans HDFS pour une utilisation ultérieure dans l'analyse et la visualisation avec Apache Superset.
 
 # Exo5
 
