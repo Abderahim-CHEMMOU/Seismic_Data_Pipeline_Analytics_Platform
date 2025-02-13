@@ -1,4 +1,5 @@
 # TP
+# repo Github : https://github.com/Abderahim-CHEMMOU/Seismic_Data_Pipeline_Analytics_Platform
 # Partie 1 : Exploration et Traitement des Données Sismiques
 # Exo1
 
@@ -466,6 +467,16 @@ CREATE DATABASE IF NOT EXISTS seismic_database;
 -- Utiliser la base de données
 USE seismic_database;
 
+CREATE EXTERNAL TABLE IF NOT EXISTS analyse_stats_horaires_parquet (
+    window_start STRING,
+    nombre_observations INT,
+    nombre_secousses INT,
+    magnitude_moyenne DOUBLE,
+    magnitude_max DOUBLE,
+    tension_moyenne DOUBLE
+)
+STORED AS PARQUET
+LOCATION 'hdfs://namenode:9000/user/hive/warehouse/seismic_data/analyse_stats_horaires';
 ```
 
 - Ensuite il faut mettre en place superset avec redis sur docker-compose
